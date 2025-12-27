@@ -1,3 +1,7 @@
+import os
+if not os.path.exists("database.db"):
+    import init_db
+
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -84,19 +88,19 @@ def get_user_stats(user):
     db = get_db()
     c = db.cursor()
 
-    c.execute("SELECT COUNT(DISTINCT date) FROM trips WHERE user=?", (user,))
+    c.execute("SELECT COUNT(DISTINCT date) FROM trips WHERE user=%s", (user,))
     active_days = c.fetchone()[0]
 
-    c.execute("SELECT COUNT(*) FROM trips WHERE user=?", (user,))
+    c.execute("SELECT COUNT(*) FROM trips WHERE user=%s", (user,))
     total_trips = c.fetchone()[0]
 
-    c.execute("SELECT COUNT(*) FROM trips WHERE user=? AND vehicle IN ('Bus','Train')", (user,))
+    c.execute("SELECT COUNT(*) FROM trips WHERE user=%s AND vehicle IN ('Bus','Train')", (user,))
     public_trips = c.fetchone()[0]
 
-    c.execute("SELECT COUNT(*) FROM trips WHERE user=? AND vehicle='Bike'", (user,))
+    c.execute("SELECT COUNT(*) FROM trips WHERE user=%s AND vehicle='Bike'", (user,))
     bike_trips = c.fetchone()[0]
 
-    c.execute("SELECT COUNT(DISTINCT month) FROM electricity WHERE user=?", (user,))
+    c.execute("SELECT COUNT(DISTINCT month) FROM electricity WHERE user=%s", (user,))
     electricity_months = c.fetchone()[0]
 
     db.close()
@@ -183,7 +187,7 @@ def login():
         db = get_db()
         c = db.cursor()
 
-        c.execute("SELECT username FROM users WHERE username=?", (username,))
+        c.execute("SELECT username FROM users WHERE username=%s", (username,))
         user = c.fetchone()
 
         db.close()
@@ -221,14 +225,14 @@ def daily_travel():
 
         c.execute("""
             INSERT INTO trips (user, mode, vehicle, distance, date)
-            VALUES (?, 'manual', ?, ?, ?)
+            VALUES (%s, 'manual', %s, %s, %s)
         """, (user, vehicle, distance, today))
         db.commit()
 
     c.execute("""
         SELECT id, vehicle, distance, mode
         FROM trips
-        WHERE user=? AND date=?
+        WHERE user=%s AND date=%s
     """, (user, today))
 
     trips = c.fetchall()
@@ -267,7 +271,7 @@ def end_trip():
             start_lat, start_lon, end_lat, end_lon,
             start_time, end_time
         )
-        VALUES (?, 'automatic', ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (%s, 'automatic', %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """, (
         session["user"],
         vehicle,
@@ -304,7 +308,7 @@ def haversine(lat1, lon1, lat2, lon2):
 def delete_trip(trip_id):
     db = get_db()
     c = db.cursor()
-    c.execute("DELETE FROM trips WHERE id=? AND user=?", (trip_id, session["user"]))
+    c.execute("DELETE FROM trips WHERE id=%s AND user=%s", (trip_id, session["user"]))
     db.commit()
     db.close()
     return redirect("/daily-travel")
@@ -321,7 +325,7 @@ def emissions():
     db = get_db()
     c = db.cursor()
 
-    c.execute("SELECT vehicle, distance, mode FROM trips WHERE user=? AND date=?",
+    c.execute("SELECT vehicle, distance, mode FROM trips WHERE user=%s AND date=%s",
               (user, today))
     rows = c.fetchall()
 
@@ -339,7 +343,7 @@ def emissions():
     travel_emission = round(travel_emission, 2)
 
     current_month = date.today().strftime("%Y-%m")
-    c.execute("SELECT SUM(co2) FROM electricity WHERE user=? AND month=?",
+    c.execute("SELECT SUM(co2) FROM electricity WHERE user=%s AND month=%s",
               (user, current_month))
     electricity_emission = round(c.fetchone()[0] or 0, 2)
 
@@ -397,7 +401,7 @@ def electricity():
         db = get_db()
         c = db.cursor()
         c.execute("""INSERT INTO electricity (user, month, units, co2, bill_file, uploaded_at)
-                     VALUES (?, ?, ?, ?, ?, ?)""",
+                     VALUES (%s, %s, %s, %s, %s, %s)""",
                   (session["user"], month, units, co2, filename, datetime.now().isoformat()))
         db.commit()
         db.close()
@@ -419,12 +423,12 @@ def suggestions():
 
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT vehicle, distance FROM trips WHERE user=? AND date=?", (user, today))
+    c.execute("SELECT vehicle, distance FROM trips WHERE user=%s AND date=%s", (user, today))
     rows = c.fetchall()
 
     travel_emission = round(sum(d * EMISSION_FACTORS.get(v, 0) for v, d in rows), 2)
 
-    c.execute("SELECT SUM(co2) FROM electricity WHERE user=?", (user,))
+    c.execute("SELECT SUM(co2) FROM electricity WHERE user=%s", (user,))
     electricity_emission = round(c.fetchone()[0] or 0, 2)
     db.close()
 
@@ -502,7 +506,7 @@ def leaderboard():
         _, points = calculate_achievements(username)
 
         # Calculate total travel emission from trips
-        c.execute("SELECT vehicle, distance FROM trips WHERE user=?", (username,))
+        c.execute("SELECT vehicle, distance FROM trips WHERE user=%s", (username,))
         rows = c.fetchall()
 
         travel_emission = 0
@@ -512,7 +516,7 @@ def leaderboard():
         travel_emission = round(travel_emission, 2)
 
         # Electricity emission
-        c.execute("SELECT SUM(co2) FROM electricity WHERE user=?", (username,))
+        c.execute("SELECT SUM(co2) FROM electricity WHERE user=%s", (username,))
         electricity_emission = round(c.fetchone()[0] or 0, 2)
 
         total_emission = round(travel_emission + electricity_emission, 2)
@@ -553,12 +557,12 @@ def signup():
         db = get_db()
         c = db.cursor()
 
-        c.execute("SELECT username FROM users WHERE username=?", (username,))
+        c.execute("SELECT username FROM users WHERE username=%s", (username,))
         if c.fetchone():
             db.close()
             return render_template("signup.html", error="Username already exists")
 
-        c.execute("INSERT INTO users (username) VALUES (?)", (username,))
+        c.execute("INSERT INTO users (username) VALUES (%s)", (username,))
         db.commit()
         db.close()
 

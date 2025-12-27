@@ -1,18 +1,14 @@
-# test-change-123
-import os
-if not os.path.exists("database.db"):
-    import init_db
-
 from dotenv import load_dotenv
 import os
 load_dotenv()
 from flask import Flask, render_template, request, redirect, session, jsonify
-import sqlite3
 from datetime import datetime, date
 import math
 import os
 from werkzeug.utils import secure_filename
 from bill_verifier import extract_text_from_bill, extract_units, verify_units
+import init_db
+init_db.init_db()
 
 # ================== APP SETUP ==================
 app = Flask(__name__)

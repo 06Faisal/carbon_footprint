@@ -1,71 +1,46 @@
-import sqlite3
+import psycopg2
+import os
 
-conn = sqlite3.connect("database.db")
-c = conn.cursor()
+def init_db():
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    c = conn.cursor()
 
-c.execute("""
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT
-)
-""")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username TEXT UNIQUE NOT NULL
+        );
+    """)
 
-c.execute("""
-CREATE TABLE trips (
-    id INTEGER PRIMARY KEY AUTimport sqlite3
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS trips (
+            id SERIAL PRIMARY KEY,
+            user_name TEXT,
+            mode TEXT,
+            vehicle TEXT,
+            distance REAL,
+            date TEXT,
+            start_lat REAL,
+            start_lon REAL,
+            end_lat REAL,
+            end_lon REAL,
+            start_time TEXT,
+            end_time TEXT
+        );
+    """)
 
-conn = sqlite3.connect("database.db")
-c = conn.cursor()
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS electricity (
+            id SERIAL PRIMARY KEY,
+            user_name TEXT,
+            month TEXT,
+            units REAL,
+            co2 REAL,
+            bill_file TEXT,
+            uploaded_at TEXT
+        );
+    """)
 
-# USERS TABLE
-c.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT
-)
-""")
-
-# TRIPS TABLE (MATCHES YOUR app.py EXACTLY)
-c.execute("""
-CREATE TABLE IF NOT EXISTS trips (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user TEXT,
-    mode TEXT,
-    vehicle TEXT,
-    distance REAL,
-    date TEXT,
-
-    start_lat REAL,
-    start_lon REAL,
-    end_lat REAL,
-    end_lon REAL,
-    start_time TEXT,
-    end_time TEXT
-)
-""")
-
-conn.commit()
-conn.close()
-
-print("✅ Database initialized successfully")
-OINCREMENT,
-    user TEXT,
-    mode TEXT,
-    vehicle TEXT,
-    distance REAL,
-    date TEXT,
-
-    start_lat REAL,
-    start_lon REAL,
-    end_lat REAL,
-    end_lon REAL,
-    start_time TEXT,
-    end_time TEXT
-)
-""")
-
-conn.commit()
-conn.close()
-print("Database initialized")
+    conn.commit()
+    c.close()
+    conn.close()

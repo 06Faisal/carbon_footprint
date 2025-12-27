@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Carbon Footprint App</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome (ONLY ONCE) -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar" id="sidebar">
+    <div class="toggle-btn" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+
+    <nav class="nav">
+
+        <a href="/home"
+           data-label="Home"
+           class="{% if page=='home' %}active{% endif %}">
+            <i class="fa-solid fa-house nav-icon"></i>
+            <span>Home</span>
+        </a>
+
+        <a href="/daily-travel"
+           data-label="Daily Travel"
+           class="{% if page=='daily_travel' %}active{% endif %}">
+            <i class="fa-solid fa-route nav-icon"></i>
+            <span>Daily Travel</span>
+        </a>
+
+        <a href="/electricity"
+           data-label="Electricity"
+           class="{% if page=='electricity' %}active{% endif %}">
+            <i class="fa-solid fa-bolt nav-icon"></i>
+            <span>Electricity</span>
+        </a>
+
+        <a href="/emissions"
+           data-label="Emissions"
+           class="{% if page=='emissions' %}active{% endif %}">
+            <i class="fa-solid fa-cloud nav-icon"></i>
+            <span>Emissions</span>
+        </a>
+
+        <a href="/suggestions"
+           data-label="Suggestions"
+           class="{% if page=='suggestions' %}active{% endif %}">
+            <i class="fa-solid fa-lightbulb nav-icon"></i>
+            <span>Suggestions</span>
+        </a>
+
+        <a href="/leaderboard"
+           data-label="Leaderboard"
+           class="{% if page=='leaderboard' %}active{% endif %}">
+            <i class="fa-solid fa-ranking-star nav-icon"></i>
+            <span>Leaderboard</span>
+        </a>
+
+        <a href="/achievements"
+           data-label="Achievements"
+           class="{% if page=='achievements' %}active{% endif %}">
+            <i class="fa-solid fa-trophy nav-icon"></i>
+            <span>Achievements</span>
+        </a>
+
+        <a href="/logout"
+           data-label="Logout"
+           class="logout">
+            <i class="fa-solid fa-right-from-bracket nav-icon"></i>
+            <span>Logout</span>
+        </a>
+
+    </nav>
+</div>
+
+<!-- ================= CONTENT ================= -->
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("expanded");
+}
+</script>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+</body>
+</html>

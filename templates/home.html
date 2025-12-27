@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>
+    Welcome {{ session['user'] }}
+    <i class="fa-solid fa-hand-wave section-icon"></i>
+</h1>
+
+<p class="page-subtitle">
+    Small daily changes can significantly reduce your carbon footprint
+    <i class="fa-solid fa-seedling subtle-icon"></i>
+</p>
+
+<!-- INFO GRID -->
+<div class="info-grid">
+
+    <div class="info-card blue">
+        <h3>
+            <i class="fa-solid fa-circle-question section-icon"></i>
+            Did You Know?
+        </h3>
+        <ul>
+            <li>
+                <i class="fa-solid fa-car info-icon"></i>
+                A petrol car emits <b>~2.3 kg CO₂</b> per liter.
+            </li>
+            <li>
+                <i class="fa-solid fa-bolt info-icon"></i>
+                1 kWh electricity produces <b>~0.82 kg CO₂</b> in India.
+            </li>
+            <li>
+                <i class="fa-solid fa-bus info-icon"></i>
+                Public transport emits <b>up to 70% less CO₂</b>.
+            </li>
+        </ul>
+    </div>
+
+    <div class="info-card green">
+        <h3>
+            <i class="fa-solid fa-leaf section-icon"></i>
+            Your Actions Matter
+        </h3>
+        <p>
+            Reducing just <b>1 kg CO₂ per day</b> saves
+            <b>365 kg CO₂ per year</b>.
+        </p>
+    </div>
+
+    <div class="info-card yellow">
+        <h3>
+            <i class="fa-solid fa-fire-flame-curved section-icon"></i>
+            Major Contributors
+        </h3>
+        <ul>
+            <li>
+                <i class="fa-solid fa-car-side info-icon"></i>
+                Private vehicle usage
+            </li>
+            <li>
+                <i class="fa-solid fa-plug info-icon"></i>
+                High electricity consumption
+            </li>
+            <li>
+                <i class="fa-solid fa-snowflake info-icon"></i>
+                AC & heater overuse
+            </li>
+            <li>
+                <i class="fa-solid fa-cart-shopping info-icon"></i>
+                Overconsumption
+            </li>
+        </ul>
+    </div>
+
+    <div class="info-card red">
+        <h3>
+            <i class="fa-solid fa-circle-check section-icon"></i>
+            Sustainable Habits
+        </h3>
+        <ul>
+            <li>
+                <i class="fa-solid fa-people-group info-icon"></i>
+                Public transport / carpool
+            </li>
+            <li>
+                <i class="fa-solid fa-lightbulb info-icon"></i>
+                Switch off unused appliances
+            </li>
+            <li>
+                <i class="fa-solid fa-person-walking info-icon"></i>
+                Walk or cycle short distances
+            </li>
+            <li>
+                <i class="fa-solid fa-chart-line info-icon"></i>
+                Track emissions daily
+            </li>
+        </ul>
+    </div>
+
+    <!-- ================= QUOTE ================= -->
+    <div class="quote-card">
+        <p>
+            “The greatest threat to our planet is the belief that someone else will save it.”
+        </p>
+        <span>
+            <i class="fa-solid fa-quote-left"></i>
+            Robert Swan
+        </span>
+    </div>
+
+</div>
+
+{% endblock %}

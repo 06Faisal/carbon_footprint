@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="electricity-container">
+
+    <div class="electricity-card">
+        <h2>⚡ Electricity Usage</h2>
+        <p class="subtitle">
+            Upload your monthly electricity bill for verification
+        </p>
+
+        <form method="POST" enctype="multipart/form-data" class="electricity-form">
+
+            <div class="form-group">
+                <label>Billing Month</label>
+                <input type="month" name="month" required>
+            </div>
+
+            <div class="form-group">
+                <label>Electricity Units (kWh)</label>
+                <input type="number" step="0.1" name="units" placeholder="e.g. 245" required>
+                <small class="help-text">Mentioned as kWh on your bill</small>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Bill (PDF / Image)</label>
+                <input type="file" name="bill" accept=".pdf,.jpg,.jpeg,.png" required>
+            </div>
+
+            <button type="submit" class="primary-btn">
+                Upload & Verify
+            </button>
+
+        </form>
+
+        {% if message %}
+            <p class="success-msg">{{ message }}</p>
+        {% endif %}
+    </div>
+{% if verification %}
+<div class="verification-box">
+    <p><b>Detected Units from Bill:</b> {{ detected_units }}</p>
+    <p><b>Verification Status:</b> {{ verification }}</p>
+</div>
+{% endif %}
+
+</div>
+
+{% endblock %}

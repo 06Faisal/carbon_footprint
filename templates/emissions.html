@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ================= HEADER ================= -->
+<h1>Daily Carbon Emissions</h1>
+<p class="page-subtitle">Your carbon footprint summary</p>
+
+<!-- ================= KPI ROW ================= -->
+<div class="summary-row">
+
+    <div class="card emission-card low">
+        <p class="total-label">
+            <i class="fa-solid fa-car card-icon"></i>
+            Travel (Today)
+        </p>
+        <div class="total-value">
+            {{ travel_emission }} <span>kg CO₂</span>
+        </div>
+    </div>
+
+    <div class="card emission-card medium">
+        <p class="total-label">
+            <i class="fa-solid fa-bolt card-icon"></i>
+            Electricity (This Month)
+        </p>
+        <div class="total-value">
+            {{ electricity_emission }} <span>kg CO₂</span>
+        </div>
+    </div>
+
+    <div class="card emission-card high">
+        <p class="total-label">
+            <i class="fa-solid fa-leaf card-icon"></i>
+            Total Emissions
+        </p>
+        <div class="total-value">
+            {{ total_combined_emission }} <span>kg CO₂</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= DETAILS ROW ================= -->
+<div class="emissions-layout">
+
+    <!-- VEHICLE CARD -->
+    <div class="card">
+        <h3>
+            <i class="fa-solid fa-chart-bar section-icon"></i>
+            Emissions by Vehicle
+        </h3>
+
+        <!-- MINI BAR -->
+        <canvas id="vehicleMiniBar"></canvas>
+
+        {% for v, e in vehicle_totals.items() %}
+        <div class="trip-item">
+            <div class="trip-left">
+                <span class="trip-icon">
+                    {% if v == "Bike" %}
+                        <i class="fa-solid fa-motorcycle"></i>
+                    {% elif v == "Bus" %}
+                        <i class="fa-solid fa-bus"></i>
+                    {% elif v == "Train" %}
+                        <i class="fa-solid fa-train"></i>
+                    {% else %}
+                        <i class="fa-solid fa-car-side"></i>
+                    {% endif %}
+                </span>
+                <div class="trip-title">{{ v }}</div>
+            </div>
+            <strong>{{ e }} kg CO₂</strong>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- TRIP CARD -->
+    <div class="card">
+        <h3>
+            <i class="fa-solid fa-list section-icon"></i>
+            Trip-wise Emissions
+        </h3>
+
+        <div class="trip-list">
+            {% for t in trips %}
+            <div class="trip-item">
+                <div class="trip-left">
+                    <span class="trip-icon">
+                        {% if t.vehicle == "Bike" %}
+                            <i class="fa-solid fa-motorcycle"></i>
+                        {% elif t.vehicle == "Bus" %}
+                            <i class="fa-solid fa-bus"></i>
+                        {% elif t.vehicle == "Train" %}
+                            <i class="fa-solid fa-train"></i>
+                        {% else %}
+                            <i class="fa-solid fa-car-side"></i>
+                        {% endif %}
+                    </span>
+
+                    <div>
+                        <div class="trip-title">{{ t.vehicle }}</div>
+                        <div class="trip-meta">
+                            <span class="trip-distance">{{ t.distance }} km</span>
+                            <span class="trip-mode {{ t.mode }}">
+                                {{ t.mode|capitalize }}
+                            </span>
+                        </div>
+
+                        <!-- PROGRESS BAR -->
+                        <div class="trip-bar">
+                            <div class="trip-bar-fill"
+                                 style="width: {{ t.emission_percent }}%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <strong>{{ t.emission }} kg CO₂</strong>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= CHART SCRIPTS ================= -->
+<script>
+const travelEmission = {{ travel_emission | tojson }};
+const electricityEmission = {{ electricity_emission | tojson }};
+const vehicleLabels = {{ vehicle_totals.keys() | list | tojson }};
+const vehicleData = {{ vehicle_totals.values() | list | tojson }};
+
+/* MINI VEHICLE BAR */
+new Chart(document.getElementById('vehicleMiniBar'), {
+    type: 'bar',
+    data: {
+        labels: vehicleLabels,
+        datasets: [{
+            data: vehicleData,
+            backgroundColor: '#ef4444'
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { display: false },
+            y: { display: false }
+        }
+    }
+});
+</script>
+
+{% endblock %}

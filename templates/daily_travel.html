@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Daily Travel</h1>
+<p>Add all trips you made today</p>
+
+<!-- MODE SELECTION -->
+<div class="card">
+    <button class="mode-btn active" id="manualBtn" onclick="switchMode('manual')">
+        <i class="fa-solid fa-pen-to-square"></i>
+        Manual Entry
+    </button>
+
+    <button class="mode-btn" id="autoBtn" onclick="switchMode('auto')">
+        <i class="fa-solid fa-location-crosshairs"></i>
+        Automatic Tracking
+    </button>
+</div>
+
+<!-- MANUAL ENTRY -->
+<div class="card" id="manualSection">
+    <h3>
+        <i class="fa-solid fa-route section-icon"></i>
+        Manual Travel Entry
+    </h3>
+
+    <form method="POST" class="manual-form">
+        <div class="form-group">
+            <label>Vehicle</label>
+            <select name="vehicle" required>
+                <option>Car</option>
+                <option>Bike</option>
+                <option>Bus</option>
+                <option>Train</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Distance (km)</label>
+            <input type="number" step="0.1" name="distance" required>
+        </div>
+
+        <button class="primary-btn">
+            <i class="fa-solid fa-plus"></i>
+            Add Trip
+        </button>
+    </form>
+</div>
+
+<!-- AUTOMATIC TRACKING -->
+<div id="autoSection" class="card hidden">
+    <h3>
+        <i class="fa-solid fa-satellite-dish section-icon"></i>
+        Automatic Travel Tracking
+    </h3>
+
+    <label>Vehicle</label>
+    <select id="autoVehicle">
+        <option value="Car">Car</option>
+        <option value="Bike">Bike</option>
+        <option value="Bus">Bus</option>
+        <option value="Train">Train</option>
+    </select>
+
+    <div style="margin-top: 12px;">
+        <button id="startTripBtn" class="primary-btn" onclick="startTrip()">
+            <i class="fa-solid fa-play"></i>
+            Start Trip
+        </button>
+
+        <button id="endTripBtn" class="end-trip-btn hidden" onclick="endTrip()">
+            <i class="fa-solid fa-stop"></i>
+            End Trip
+        </button>
+    </div>
+
+    <p id="tripStatus" style="margin-top:10px;color:#555;"></p>
+</div>
+
+<!-- TRIPS LIST -->
+{% if trips %}
+<div class="card">
+    <h3>
+        <i class="fa-solid fa-list section-icon"></i>
+        Today's Trips
+    </h3>
+
+    <div class="trip-list">
+        {% for id, vehicle, distance, mode in trips %}
+        <div class="trip-item">
+            <div class="trip-left">
+
+                <span class="trip-icon">
+                    {% if vehicle == "Bike" %}
+                        <i class="fa-solid fa-motorcycle"></i>
+                    {% elif vehicle == "Bus" %}
+                        <i class="fa-solid fa-bus"></i>
+                    {% elif vehicle == "Train" %}
+                        <i class="fa-solid fa-train"></i>
+                    {% else %}
+                        <i class="fa-solid fa-car-side"></i>
+                    {% endif %}
+                </span>
+
+                <div class="trip-info">
+                    <div class="trip-title">{{ vehicle }}</div>
+                    <div class="trip-meta">
+                        <span class="trip-distance">{{ distance }} km</span>
+                        <span class="trip-mode {{ mode }}">
+                            {{ mode|capitalize }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="/delete-trip/{{ id }}">
+                <button class="trip-delete">
+                    <i class="fa-solid fa-trash"></i>
+                    Delete
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- FINISH DAY -->
+    <div class="finish-day-box">
+        <form action="{{ url_for('finish_day') }}" method="POST">
+            <button class="finish-btn">
+                <i class="fa-solid fa-flag-checkered"></i>
+                Finish Day
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

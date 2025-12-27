@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Leaderboard</h1>
+<p class="page-subtitle">Compare your carbon footprint with others</p>
+
+<div class="stats-row">
+
+    <div class="stat-card">
+        <p class="stat-label">Your Rank</p>
+        <div class="stat-value">#{{ your_rank }}</div>
+        <p class="level-sub">Out of {{ total_users }} users</p>
+    </div>
+
+    <div class="stat-card">
+        <p class="stat-label">Your Points</p>
+        <div class="stat-value">{{ your_points }}</div>
+        <p class="level-sub">Eco Points</p>
+    </div>
+
+    <div class="stat-card">
+        <p class="stat-label">Avg Daily Emission</p>
+        <div class="stat-value">{{ your_avg_emission }} kg</div>
+        <p class="level-sub">Last 30 days</p>
+    </div>
+
+</div>
+
+<div class="card">
+    <h3>
+        <i class="fa-solid fa-ranking-star section-icon"></i>
+        Top Users
+    </h3>
+
+    <div class="achievement-list">
+
+        {% for u in leaderboard %}
+        <div class="achievement-row">
+            <strong>#{{ loop.index }}</strong>
+            <span>{{ u.username }}</span>
+            <span>{{ u.points }} pts</span>
+            <span>{{ u.avg_emission }} kg/day</span>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

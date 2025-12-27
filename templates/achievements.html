@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ================= ACHIEVEMENTS PAGE HEADER ================= -->
+<h1 class="page-title">Achievements</h1>
+<p class="page-subtitle">Track your progress and earn rewards for sustainable habits</p>
+
+<!-- ================= SUMMARY SECTION ================= -->
+<div class="summary-row">
+
+    <!-- Total Points -->
+    <div class="card summary-card">
+        <div class="summary-icon">
+            <i class="fa-solid fa-trophy"></i>
+        </div>
+        <div>
+            <p class="summary-label">Total Points</p>
+            <h2 class="summary-value">{{ points }}</h2>
+        </div>
+    </div>
+
+    <!-- Current Level -->
+    <div class="card summary-card">
+        <div class="summary-icon">
+            <i class="fa-solid fa-seedling"></i>
+        </div>
+        <div>
+            <p class="summary-label">Current Level</p>
+            <h2 class="summary-value">{{ current_level[0] }}</h2>
+            {% if next_level %}
+            <p class="summary-sub">Next Level at {{ next_level[1] }} points</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ (points / next_level[1] * 100) | round(0) }}%"></div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= UNLOCKED ACHIEVEMENTS ================= -->
+<h2 class="section-title">
+    <i class="fa-solid fa-medal"></i> Unlocked Achievements
+</h2>
+
+{% if achievements %}
+<div class="vertical-list">
+
+    {% for title, pts in achievements %}
+    <div class="achievement-row">
+        <div class="achievement-left">
+            <i class="fa-solid fa-check-circle success-icon"></i>
+            <div>
+                <h3>{{ title }}</h3>
+                <p>{{ pts }} points earned</p>
+            </div>
+        </div>
+        <span class="points-badge">+{{ pts }}</span>
+    </div>
+    {% endfor %}
+
+</div>
+{% else %}
+<p class="muted-text">No achievements unlocked yet</p>
+{% endif %}
+
+<!-- ================= ACHIEVEMENT PROGRESS ================= -->
+<h2 class="section-title">
+    <i class="fa-solid fa-chart-line"></i> Achievement Progress
+</h2>
+
+<div class="vertical-list">
+
+{% for a in progress %}
+<div class="achievement-row">
+
+    <div class="achievement-left">
+        <i class="fa-solid fa-bullseye"></i>
+        <div>
+            <h3>{{ a.name }}</h3>
+            <p>{{ a.desc }}</p>
+            <p class="muted-text">
+                {{ a.current }} / {{ a.target }} {{ a.unit }}
+                — {{ a.target - a.current }} remaining
+            </p>
+        </div>
+    </div>
+
+    <div class="achievement-right">
+        <span class="points-badge">+{{ a.points }}</span>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ a.percent }}%"></div>
+        </div>
+    </div>
+
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

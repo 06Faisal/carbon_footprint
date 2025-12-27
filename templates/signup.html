@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up | Carbon Footprint App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+
+<div class="bg-image"></div>
+<div class="bg-overlay"></div>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+
+        <div class="logo">🌱</div>
+        <h1>Create Account</h1>
+        <p class="subtitle">Start reducing your footprint</p>
+
+        {% if error %}
+            <p style="color:red; font-size:13px;">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label>Username</label>
+            <input type="text" name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm" required>
+
+            <button type="submit" class="login-btn">
+                Sign Up
+            </button>
+        </form>
+
+        <div class="divider"></div>
+
+        <a href="{{ url_for('login') }}" class="signup-btn">
+            Back to Login
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

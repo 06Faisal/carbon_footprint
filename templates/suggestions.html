@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ================= HEADER ================= -->
+<h1>
+    <i class="fa-solid fa-lightbulb section-icon"></i>
+    Personalized Suggestions
+</h1>
+<p class="page-subtitle">
+    Based on your recent carbon emissions
+</p>
+
+<!-- ================= SUMMARY ================= -->
+<div class="summary-row">
+
+    <div class="card">
+        <h4>
+            <i class="fa-solid fa-car card-icon"></i>
+            Travel Emissions
+        </h4>
+        <p><strong>{{ travel }} kg CO₂</strong></p>
+    </div>
+
+    <div class="card">
+        <h4>
+            <i class="fa-solid fa-bolt card-icon"></i>
+            Electricity Emissions
+        </h4>
+        <p><strong>{{ electricity }} kg CO₂</strong></p>
+    </div>
+
+</div>
+
+<!-- ================= SUGGESTIONS ================= -->
+<div class="card suggestion-card" style="margin-top:20px;">
+    <h3>
+        <i class="fa-solid fa-check-circle section-icon"></i>
+        Recommended Actions
+    </h3>
+
+    <ul style="margin-top:12px; padding-left:18px;">
+        {% for s in suggestions %}
+        <li style="margin-bottom:8px;">
+            <i class="fa-solid fa-arrow-right suggestion-icon"></i>
+            {{ s }}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="card" style="margin-top:20px;">
+    <h3>
+        <i class="fa-solid fa-trophy section-icon"></i>
+        Sustainability Rewards
+    </h3>
+
+    <p class="page-subtitle">
+        Estimated points you can earn by following these actions
+    </p>
+
+    <div style="margin-top:10px;">
+        <b>🏆 Potential Reward:</b> {{ reward_points }} points
+    </div>
+</div>
+
+<!-- ================= INSIGHTS ================= -->
+<div class="emissions-layout" style="margin-top:30px;">
+
+    <div class="card">
+        <h3>
+            <i class="fa-solid fa-chart-line section-icon"></i>
+            Potential CO₂ Reduction
+        </h3>
+        <p class="page-subtitle">
+            Estimated savings if you follow the suggestions
+        </p>
+        <canvas id="reductionChart"></canvas>
+    </div>
+
+    <div class="card">
+        <h3>
+            <i class="fa-solid fa-scale-balanced section-icon"></i>
+            Current vs After Suggestions
+        </h3>
+        <canvas id="comparisonChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= CHARTS ================= -->
+<script>
+const reductionLabels = {{ reduction_labels | tojson }};
+const reductionValues = {{ reduction_values | tojson }};
+
+const currentEmission = {{ travel + electricity }};
+const improvedEmission = {{ improved_emission }};
+
+/* Potential Reduction */
+new Chart(document.getElementById("reductionChart"), {
+    type: "bar",
+    data: {
+        labels: reductionLabels,
+        datasets: [{
+            label: "kg CO₂ Saved",
+            data: reductionValues,
+            backgroundColor: "#22c55e"
+        }]
+    },
+    options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
+    }
+});
+
+/* Current vs Improved */
+new Chart(document.getElementById("comparisonChart"), {
+    type: "bar",
+    data: {
+        labels: ["Current", "After Suggestions"],
+        datasets: [{
+            data: [currentEmission, improvedEmission],
+            backgroundColor: ["#ef4444", "#22c55e"]
+        }]
+    },
+    options: {
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { display: false } }
+    }
+});
+</script>
+
+{% endblock %}

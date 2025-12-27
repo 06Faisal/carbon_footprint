@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+import os
+load_dotenv()
 from flask import Flask, render_template, request, redirect, session, jsonify
 import sqlite3
 from datetime import datetime, date
@@ -27,8 +30,11 @@ EMISSION_FACTORS = {
 ELECTRICITY_FACTOR = 0.82  # kg CO₂ per kWh (India)
 
 # ================== DB HELPER ==================
+import psycopg2
+
 def get_db():
-    return sqlite3.connect(DB)
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
+
 
 # ================== ACHIEVEMENT ENGINE ==================
 

@@ -40,6 +40,7 @@ def init_db():
             uploaded_at TEXT
         );
     """)
+c.execute("DROP TABLE IF EXISTS trips, electricity;")
 
     conn.commit()
     c.close()

@@ -5,6 +5,11 @@ def init_db():
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     c = conn.cursor()
 
+    # TEMP RESET (remove after first deploy)
+    c.execute("DROP TABLE IF EXISTS trips;")
+    c.execute("DROP TABLE IF EXISTS electricity;")
+
+
     c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,

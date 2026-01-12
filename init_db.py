@@ -5,11 +5,6 @@ def init_db():
     conn = psycopg2.connect(os.getenv("DATABASE_URL"))
     c = conn.cursor()
 
-    # TEMP RESET (remove after first deploy)
-    c.execute("DROP TABLE IF EXISTS trips;")
-    c.execute("DROP TABLE IF EXISTS electricity;")
-
-
     c.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
@@ -20,7 +15,7 @@ def init_db():
     c.execute("""
         CREATE TABLE IF NOT EXISTS trips (
             id SERIAL PRIMARY KEY,
-            user_id TEXT,
+            user_name TEXT,
             mode TEXT,
             vehicle TEXT,
             distance REAL,
@@ -37,7 +32,7 @@ def init_db():
     c.execute("""
         CREATE TABLE IF NOT EXISTS electricity (
             id SERIAL PRIMARY KEY,
-            user_id TEXT,
+            user_name TEXT,
             month TEXT,
             units REAL,
             co2 REAL,
@@ -45,7 +40,6 @@ def init_db():
             uploaded_at TEXT
         );
     """)
-c.execute("DROP TABLE IF EXISTS trips, electricity;")
 
     conn.commit()
     c.close()

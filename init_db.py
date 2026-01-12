@@ -15,7 +15,7 @@ def init_db():
     c.execute("""
         CREATE TABLE IF NOT EXISTS trips (
             id SERIAL PRIMARY KEY,
-            user_name TEXT,
+            user_id TEXT,
             mode TEXT,
             vehicle TEXT,
             distance REAL,
@@ -32,7 +32,7 @@ def init_db():
     c.execute("""
         CREATE TABLE IF NOT EXISTS electricity (
             id SERIAL PRIMARY KEY,
-            user_name TEXT,
+            user_id TEXT,
             month TEXT,
             units REAL,
             co2 REAL,
